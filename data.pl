@@ -1,13 +1,16 @@
+:-dynamic board/2.
 
 % board(+Size,+Matrix)
 % Board structure
-Board(5,[
+board(5,[
 
-        [empty,empty,empty,empty,empty],
-        [empty,empty,empty,empty,empty],
-        [empty,empty,empty,empty,empty],
-        [empty,empty,empty,empty,empty],
-        [empty,empty,empty,empty,empty]
+  [empty,empty,empty,empty,empty],
+  [empty,empty,empty,empty,empty],
+  [empty,empty,empty,empty,empty],
+  [empty,empty,empty,empty,empty],
+  [empty,empty,empty,empty,empty]
 
 ]).
+
+
 
