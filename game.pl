@@ -17,4 +17,4 @@ display_board(_) :-
     write('-------------------------------').
 
 
-display_player1
+% display_player1
