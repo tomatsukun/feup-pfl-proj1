@@ -26,29 +26,90 @@ main_menu :-
     process_option(Option).
 
 
+
 % Processa a escolha do usuário.
 process_option(1) :- % Humano vs Humano
-    write('Teste opcao 1'),nl,
-    start_game(human, human).
+    clear,
+    choose_move.
+
+
+choose_move:-
+    write('|-----------------------------|'), nl,
+    write('|         Choose Move         |'), nl,
+    write('|-----------------------------|'), nl,
+    write('| 1. Place piece              |'), nl,
+    write('| 2. Move Piece               |'), nl,
+    write('|-----------------------------|'), nl,
+    write('| Escolha uma opcao: '),
+    read(Option),
+    process_choose_move(Option).
+
+
+%% Player chose to place a piece
+process_choose_move(1):-
+      clear,
+      place_piece.
+
+
+
+%% Player chose to move a already existing piece
+process_choose_move(2):-
+      clear,
+      move_piece.
+
+
+%% Place piece 
+place_piece:-
+  write('|-----------------------------|'), nl,
+  write('|    Choose Where to place    |'), nl,
+  write('|-----------------------------|'), nl,
+  write('| X-Y of the piece |'), nl,
+  read(X-Y),
+
+  write('New piece cords '),
+  write('('),
+  write(X), write(','), write(Y),
+  write(')').
 
 
 
 
-process_option(2) :- % Humano vs Computador
-    ai_difficulty_menu(Diff), % Primeiro escolhe a dificuldade
-    process_difficulty(Diff, Player2),
-    start_game(human, Player2).
-process_option(3) :- % Computador vs Computador
-    ai_difficulty_menu(Diff1), % Escolhe dificuldade para o jogador 1
-    process_difficulty(Diff1, Player1),
-    ai_difficulty_menu(Diff2), % Escolhe dificuldade para o jogador 2
-    process_difficulty(Diff2, Player2),
-    start_game(Player1, Player2).
-process_option(4) :- % Sair
-    !, write('Adeus!'), nl.
-process_option(_) :-
-    write('Opção inválida!'), nl,
-    main_menu.
+%% Move piece 
+move_piece:-
+  write('|-----------------------------|'), nl,
+  write('|    Choose Piece to Move     |'), nl,
+  write('|-----------------------------|'), nl,
+  write('| X of the piece |'), nl,
+  read(X_old),
+  write('| Y of the piece |'), nl,
+  read(Y_old),
+
+  write('|-----------------------------|'), nl,
+  write('|    Choose Where to Move     |'), nl,
+  write('|-----------------------------|'), nl,
+  write('| New X of the piece |'), nl,
+  read(X_new),
+  write('| New Y of the piece |'), nl,
+  read(Y_new),
+  process_move_piece(X_old-Y_old, X_new-Y_new ).
+
+
+
+
+
+process_move_piece(X_old-Y_old, X_new-Y_new ):-
+  write('| Old X = |'), write(X_old),nl,
+  write('| New X = |'), write(X_new),nl,
+  write('| Old Y = |'), write(Y_old),nl,
+  write('| New Y = |'), write(Y_new).
+
+
+
+
+
+
+
+
 
 % --------------------- MENU DE DIFICULDADE DA AI ---------------------
 

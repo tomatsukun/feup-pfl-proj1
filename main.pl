@@ -5,6 +5,9 @@
 
 
 
+play:-
+    clear,
+    main_menu.
 
    
 
