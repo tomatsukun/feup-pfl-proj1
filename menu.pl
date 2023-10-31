@@ -29,11 +29,12 @@ main_menu :-
 
 % Processa a escolha do usuário.
 process_option(1) :- % Humano vs Humano
+    initial_board(Board),
     clear,
-    choose_move.
+    choose_move(Board).
 
 
-choose_move:-
+choose_move(Board):-
     write('|-----------------------------|'), nl,
     write('|         Choose Move         |'), nl,
     write('|-----------------------------|'), nl,
@@ -42,13 +43,13 @@ choose_move:-
     write('|-----------------------------|'), nl,
     write('| Escolha uma opcao: '),
     read(Option),
-    process_choose_move(Option).
+    process_choose_move(Option, Board).
 
 
 %% Player chose to place a piece
-process_choose_move(1):-
+process_choose_move(1, Board):-
       clear,
-      place_piece.
+      place_piece(Board).
 
 
 
@@ -59,7 +60,7 @@ process_choose_move(2):-
 
 
 %% Place piece 
-place_piece:-
+place_piece(Board):-
   write('|-----------------------------|'), nl,
   write('|    Choose Where to place    |'), nl,
   write('|-----------------------------|'), nl,
@@ -69,7 +70,14 @@ place_piece:-
   write('New piece cords '),
   write('('),
   write(X), write(','), write(Y),
-  write(')').
+  write(')'), nl,
+  run(r,X, Y, Board, UpdatedBoard),
+  continues(UpdatedBoard).
+
+continues(Board):-
+    write('Do you want to place another piece? (yes/no)'), nl,
+    read(Answer),
+    (Answer = yes -> place_piece(Board); true).
 
 
 
