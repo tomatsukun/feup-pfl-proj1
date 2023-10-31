@@ -54,13 +54,15 @@ replace_in_row([Column|Columns], ColumnIndex, Value, [Column|UpdatedColumns]) :-
     NewColumnIndex is ColumnIndex - 1,
     replace_in_row(Columns, NewColumnIndex, Value, UpdatedColumns).
 
-run(Piece, X, Y, Board, UpdatedBoard):-
+run(Piece, X, Y, Board, UpdatedBoard, Counter, NewCounter):-
     (valid_coordinates(X, Y) ->
         update_board(Board, X, Y, [Piece], UpdatedBoard),
-        display_board(UpdatedBoard)
+        display_board(UpdatedBoard),
+        NewCounter is Counter - 1
     ;   write('Invalid coordinates. Please choose within the board.'), nl, 
         UpdatedBoard = Board, % Maintain the board state if coordinates are invalid
-        display_board(Board)
+        display_board(Board),
+        NewCounter = Counter
     ).
 
 

@@ -49,7 +49,7 @@ choose_move(Board):-
 %% Player chose to place a piece
 process_choose_move(1, Board):-
       clear,
-      place_piece(Board).
+      place_piece(8, Board).
 
 
 
@@ -60,7 +60,13 @@ process_choose_move(2):-
 
 
 %% Place piece 
-place_piece(Board):-
+place_piece(0, Board) :-
+    write('|-----------------------------|'), nl,
+    write('|       All pieces placed!    |'), nl,
+    write('|-----------------------------|'), nl, nl,  
+    display_board(Board).
+place_piece(Counter, Board):-
+  Counter > 0,
   write('|-----------------------------|'), nl,
   write('|    Choose Where to place    |'), nl,
   write('|-----------------------------|'), nl,
@@ -71,13 +77,13 @@ place_piece(Board):-
   write('('),
   write(X), write(','), write(Y),
   write(')'), nl,
-  run(r,X, Y, Board, UpdatedBoard),
-  continues(UpdatedBoard).
-
-continues(Board):-
+  run(r,X, Y, Board, UpdatedBoard, Counter, NewCounter),
+  continues(NewCounter, UpdatedBoard).
+  
+continues(NewCounter, Board):-
     write('Do you want to place another piece? (yes/no)'), nl,
     read(Answer),
-    (Answer = yes -> place_piece(Board); true).
+    (Answer = yes -> place_piece(NewCounter, Board); true).
 
 
 
