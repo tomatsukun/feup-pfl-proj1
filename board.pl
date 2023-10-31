@@ -17,12 +17,14 @@ display_row([Cell | Rest]) :-
     display_row(Rest).
 
 %preencher o board
-display_board([]):- write('|-----|-----|-----|-----|-----| '), nl.
-display_board([Row | Rest]) :-
-    write('|-----|-----|-----|-----|-----| '), nl,
-    write('|'),
+display_board([], _):- write('  |-----|-----|-----|-----|-----| '), nl.
+display_board([Row | Rest], Index) :-
+    write('  |-----|-----|-----|-----|-----| '), nl,
+    write(Index),
+    write(' |'),
     display_row(Row),
-    display_board(Rest), nl.
+    NewIndex is Index + 1,
+    display_board(Rest, NewIndex), nl.
 
 %estado inicial do board e o seu display
 initial_board(Board):-
@@ -57,11 +59,13 @@ replace_in_row([Column|Columns], ColumnIndex, Value, [Column|UpdatedColumns]) :-
 run(Piece, X, Y, Board, UpdatedBoard, Counter, NewCounter):-
     (valid_coordinates(X, Y) ->
         update_board(Board, X, Y, [Piece], UpdatedBoard),
-        display_board(UpdatedBoard),
+        write('     0     1     2     3     4'), nl, 
+        display_board(UpdatedBoard, 0),
         NewCounter is Counter - 1
     ;   write('Invalid coordinates. Please choose within the board.'), nl, 
         UpdatedBoard = Board, % Maintain the board state if coordinates are invalid
-        display_board(Board),
+        write('     0     1     2     3     4'), nl, 
+        display_board(Board, 0),
         NewCounter = Counter
     ).
 
