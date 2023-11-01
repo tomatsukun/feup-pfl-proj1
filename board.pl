@@ -6,10 +6,28 @@ cell([r | _], ' r ').
 cell([b | _], ' b ').
 cell(_, '   ').
 
+choose_cell([r | _], 1, ' P ').
+choose_cell([r | _], 2, ' R ').
+choose_cell([r | _], 3, ' L ').
+choose_cell([r | _], 4, ' B ').
+choose_cell([r | _], 5, ' Q ').
+choose_cell([r | _], 6, ' K ').
+
+choose_cell([b | _], 1, ' 1 ').
+choose_cell([b | _], 2, ' 2 ').
+choose_cell([b | _], 3, ' 3 ').
+choose_cell([b | _], 4, ' 4 ').
+choose_cell([b | _], 5, ' 5 ').
+choose_cell([b | _], 6, ' 6 ').
+
+choose_cell(_, 0, '   ').
+
+
 %criar cada row do board
 display_row([]) :- nl.
 display_row([Cell | Rest]) :-
-    cell(Cell, DisplayCell),
+    length(Cell, Length),
+    choose_cell(Cell, Length, DisplayCell),
     write(' '),         % |_
     write(DisplayCell), % |_c
     write(' '),         % |_c_
@@ -73,3 +91,14 @@ run(Piece, X, Y, Board, UpdatedBoard, Counter, NewCounter):-
 valid_coordinates(X, Y) :-
     X >= 0, X < 5, % Assuming a 5x5 board
     Y >= 0, Y < 5.
+
+check_piece(Board, X, Y) :-
+    nth0(X, Board, Row),          % Get the X-th row
+    nth0(Y, Row, Cell),           % Get the Y-th element in that row
+    Cell \= [].                   % Check if the cell is not empty
+
+
+move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Piece, UpdatedBoard) :-
+    update_board(Board, CurrentX, CurrentY, [], TempBoard),
+    update_board(TempBoard, NewX, NewY, [Piece], UpdatedBoard),
+    display_board(UpdatedBoard, 0).

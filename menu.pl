@@ -97,10 +97,16 @@ process_choose_move(1, Board):-
     place_piece(8, Board).
 
 %% Player chose to move a already existing piece
-process_choose_move(2):-
+process_choose_move(2, Board):-
     clear,
-    %move_piece.
-    write('Escolheu move piece.').
+    write('Enter the current position (X-Y) of the piece you want to move: '), nl,
+    read(CurrentX-CurrentY),
+    (check_piece(Board, CurrentX, CurrentY) ->
+        write('Enter the new position (X-Y) for the piece: '),
+        read(NewX-NewY),
+        move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard)
+    ;   write('No piece found at the specified current position.'), nl
+    ).
 
 
 %% Place piece 
@@ -123,12 +129,17 @@ place_piece(Counter, Board):-
     write(')'), nl,
 
     run(r,X, Y, Board, UpdatedBoard, Counter, NewCounter),
-    continues(NewCounter, UpdatedBoard).
+    continuesO(NewCounter, UpdatedBoard).
   
-continues(NewCounter, Board):-
+continuesO(NewCounter, Board):-
     write('Do you want to place another piece? (yes/no)'), nl,
     read(Answer),
-    (Answer = yes -> place_piece(NewCounter, Board); true).
+    (Answer = yes -> 
+        place_piece(NewCounter, Board)
+    ;   (Answer = no ->
+            choose_move(Board), nl
+        )
+    ).
 
 
 
