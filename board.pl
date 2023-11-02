@@ -66,11 +66,43 @@ replace([Row|Rows], RowIndex, Column, Value, [Row|UpdatedRows]) :-
     replace(Rows, NewRowIndex, Column, Value, UpdatedRows).
 
 % Predicate to replace the value in a specific column in a row
-replace_in_row([_|Columns], 0, Value, [Value|Columns]).
+replace_in_row([Column|Columns], 0, Value, [[Value | Column]|Columns]).
 replace_in_row([Column|Columns], ColumnIndex, Value, [Column|UpdatedColumns]) :-
     ColumnIndex > 0,
     NewColumnIndex is ColumnIndex - 1,
     replace_in_row(Columns, NewColumnIndex, Value, UpdatedColumns).
+
+
+
+% Predicate to update the board at a specific Row, Column with Value
+remove_from_stack(Board, Row, Column, UpdatedBoard) :-
+    write('Column'), nl,
+    write(Column), nl,
+    find_row_remove(Board, Row, Column, UpdatedBoard).
+
+% Predicate to replace the value at Row, Column in the board
+find_row_remove([Row|Rows], 0, Column, [UpdatedRow|Rows]) :-
+    write('Column'), nl,
+    write(Column), nl,
+    find_col_remove(Row, Column, UpdatedRow).
+
+find_row_remove([Row|Rows], RowIndex, Column, [Row|UpdatedRows]) :-
+    write('1'), nl,
+    RowIndex > 0,
+    write('2'), nl,
+    NewRowIndex is RowIndex - 1,
+    find_row_remove(Rows, NewRowIndex, Column, UpdatedRows).
+
+% Predicate to replace the value in a specific column in a row
+find_col_remove([[Top | Rest] |Columns], 0, [Rest | Columns]).
+find_col_remove([Column|Columns], ColumnIndex, [Column|UpdatedColumns]) :-
+    write('3'), nl,
+    ColumnIndex > 0,
+    write(ColumnIndex), nl,
+    write('4'), nl,
+    NewColumnIndex is ColumnIndex - 1,
+    find_col_remove(Columns, NewColumnIndex, UpdatedColumns).
+
 
 run(Piece, X, Y, Board, UpdatedBoard, Counter, NewCounter):-
     (valid_coordinates(X, Y) ->
@@ -81,7 +113,7 @@ run(Piece, X, Y, Board, UpdatedBoard, Counter, NewCounter):-
             display_board(Board, 0),
             NewCounter = Counter
         ; 
-            update_board(Board, X, Y, [Piece], UpdatedBoard),
+            update_board(Board, X, Y, Piece, UpdatedBoard),
             write('     0     1     2     3     4'), nl, 
             display_board(UpdatedBoard, 0),
             NewCounter is Counter - 1
@@ -105,7 +137,8 @@ check_piece(Board, X, Y) :-
 
 
 move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Piece, UpdatedBoard) :-
-    update_board(Board, CurrentX, CurrentY, [], TempBoard),
-    update_board(TempBoard, NewX, NewY, [Piece], UpdatedBoard),
+    remove_from_stack(Board, CurrentX, CurrentY, TempBoard),
+    update_board(TempBoard, NewX, NewY, Piece, UpdatedBoard),
+    write('     0     1     2     3     4'), nl,
     display_board(UpdatedBoard, 0).
     
