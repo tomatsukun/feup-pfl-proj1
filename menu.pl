@@ -24,17 +24,17 @@ main_menu :-
     write('|-----------------------------|'), nl,
     write('| Escolha uma opcao: '),
     read(Option),
-    process_option(Option).
+    process_option(Option, 8).
 
 
 
 % Processa a escolha do usuário.
-process_option(1) :- % Humano vs Humano
+process_option(1, Counter) :- % Humano vs Humano
     initial_board(Board),
     clear,
-    choose_move(Board).
+    choose_move(Board, Counter).
 
-process_option(2) :- % Humano vs Computador
+process_option(2, Counter) :- % Humano vs Computador
     initial_board(Board),
     clear,
     choose_bot_dif(Board).
@@ -79,33 +79,41 @@ continues(NewCounter, Board):-
 
 
 
-choose_move(Board):-
+choose_move(Board, Counter):-
     write('|-----------------------------|'), nl,
     write('|         Choose Move         |'), nl,
     write('|-----------------------------|'), nl,
     write('| 1. Place piece              |'), nl,
     write('| 2. Move Piece               |'), nl,
     write('|-----------------------------|'), nl,
-    write('| Escolha uma opcao: '),
+    write('| Choose an option: '), nl,
     read(Option),
-    process_choose_move(Option, Board).
+    process_choose_move(Option, Board, Counter).
 
 
 %% Player chose to place a piece
-process_choose_move(1, Board):-
+process_choose_move(1, Board, Counter):-
     clear,
-    place_piece(8, Board).
+    place_piece(Counter, Board).
 
 %% Player chose to move a already existing piece
-process_choose_move(2, Board):-
-    clear,
+process_choose_move(2, Board, Counter):-
+    nl,
     write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
     (check_piece(Board, CurrentX, CurrentY) ->
-        write('Enter the new position (X-Y) for the piece: '),
+        write('Enter the new position (X-Y) for the piece: '), nl, 
         read(NewX-NewY),
-        move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard)
-    ;   write('No piece found at the specified current position.'), nl
+        (check_piece(Board, NewX, NewY) ->
+             move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard), nl, nl, 
+             choose_move(UpdatedBoard, Counter)
+        ; 
+            write('Must be an occupied cell. Please, try again.'), nl, nl, 
+            process_choose_move(2, Board, Counter)
+
+        );
+        write('No piece found at the specified current position.'), nl, nl, 
+        process_choose_move(2, Board, Counter)
     ).
 
 
@@ -114,7 +122,7 @@ place_piece(0, Board) :-
     write('|-----------------------------|'), nl,
     write('|       All pieces placed!    |'), nl,
     write('|-----------------------------|'), nl, nl,  
-    display_board(Board).
+    display_board(Board, 0).
 place_piece(Counter, Board):-
     Counter > 0,
     write('|-----------------------------|'), nl,
@@ -128,16 +136,18 @@ place_piece(Counter, Board):-
     write(X), write(','), write(Y),
     write(')'), nl,
 
-    run(r,X, Y, Board, UpdatedBoard, Counter, NewCounter),
+    run(r, X, Y, Board, UpdatedBoard, Counter, NewCounter),
     continuesO(NewCounter, UpdatedBoard).
   
 continuesO(NewCounter, Board):-
     write('Do you want to place another piece? (yes/no)'), nl,
     read(Answer),
     (Answer = yes -> 
+        clear,
         place_piece(NewCounter, Board)
     ;   (Answer = no ->
-            choose_move(Board), nl
+            clear,
+            choose_move(Board, NewCounter), nl
         )
     ).
 

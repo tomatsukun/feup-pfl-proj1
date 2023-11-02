@@ -2,9 +2,7 @@
 
 
 %celulas do board
-cell([r | _], ' r ').
-cell([b | _], ' b ').
-cell(_, '   ').
+
 
 choose_cell([r | _], 1, ' P ').
 choose_cell([r | _], 2, ' R ').
@@ -76,17 +74,25 @@ replace_in_row([Column|Columns], ColumnIndex, Value, [Column|UpdatedColumns]) :-
 
 run(Piece, X, Y, Board, UpdatedBoard, Counter, NewCounter):-
     (valid_coordinates(X, Y) ->
-        update_board(Board, X, Y, [Piece], UpdatedBoard),
-        write('     0     1     2     3     4'), nl, 
-        display_board(UpdatedBoard, 0),
-        NewCounter is Counter - 1
-    ;   write('Invalid coordinates. Please choose within the board.'), nl, 
+        (check_piece(Board, X, Y) ->
+            write('Already occupied. Choose another cell.'), nl,
+            UpdatedBoard = Board,
+            write('     0     1     2     3     4'), nl, 
+            display_board(Board, 0),
+            NewCounter = Counter
+        ; 
+            update_board(Board, X, Y, [Piece], UpdatedBoard),
+            write('     0     1     2     3     4'), nl, 
+            display_board(UpdatedBoard, 0),
+            NewCounter is Counter - 1
+        );
+        write('Invalid coordinates. Please choose within the board.'), nl, 
         UpdatedBoard = Board, % Maintain the board state if coordinates are invalid
         write('     0     1     2     3     4'), nl, 
         display_board(Board, 0),
         NewCounter = Counter
     ).
-
+ 
 
 valid_coordinates(X, Y) :-
     X >= 0, X < 5, % Assuming a 5x5 board
@@ -102,3 +108,4 @@ move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Piece, UpdatedBoard) :-
     update_board(Board, CurrentX, CurrentY, [], TempBoard),
     update_board(TempBoard, NewX, NewY, [Piece], UpdatedBoard),
     display_board(UpdatedBoard, 0).
+    
