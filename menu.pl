@@ -102,15 +102,19 @@ process_choose_move(2, Board, Counter):-
     write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
     (check_piece(Board, CurrentX, CurrentY) ->
+        get_length(Board, CurrentX, CurrentY, Length), 
         write('Enter the new position (X-Y) for the piece: '), nl, 
         read(NewX-NewY),
         (check_piece(Board, NewX, NewY) ->
-             move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard), nl, nl, 
-             choose_move(UpdatedBoard, Counter)
-        ; 
+            (validate_move(CurrentX, CurrentY, NewX, NewY, Length) ->
+                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard), nl, nl, 
+                choose_move(UpdatedBoard, Counter)
+            ; 
+                process_choose_move(2, Board, Counter)
+            )
+        ;
             write('Must be an occupied cell. Please, try again.'), nl, nl, 
             process_choose_move(2, Board, Counter)
-
         );
         write('No piece found at the specified current position.'), nl, nl, 
         process_choose_move(2, Board, Counter)

@@ -1,6 +1,7 @@
 :- consult(utils).
 :- consult(menu).
 :- consult(board).
+:- consult(game).
 
 
 

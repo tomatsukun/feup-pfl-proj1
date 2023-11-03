@@ -142,3 +142,8 @@ move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Piece, UpdatedBoard) :-
     write('     0     1     2     3     4'), nl,
     display_board(UpdatedBoard, 0).
     
+get_length(Board, CurrentX, CurrentY, Length):-
+    nth0(CurrentX, Board, Row),          % Get the X-th row
+    nth0(CurrentY, Row, Cell),           % Get the Y-th element in that row
+    length(Cell, Length).
+
