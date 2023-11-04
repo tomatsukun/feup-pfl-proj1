@@ -91,3 +91,19 @@ validate_move(CurrentX, CurrentY, NewX, NewY, 4):-
 
 validate_move(CurrentX, CurrentY, NewX, NewY, 5):-
     true.
+
+
+% trocar de jogador
+
+next_player(player, player, player-player).
+next_player(player, bot, player-bot).
+next_player(bot, player, player-bot).
+next_player(botF, botD, botF-botD).
+next_player(botD, botF, botF-botD).
+
+
+check_six_maKING(Board, Winner) :-
+    member(Rows, Board),
+    member(Stack, Rows),
+    length(Stack, 6),
+    Stack = [Winner | _].

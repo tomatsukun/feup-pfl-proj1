@@ -24,17 +24,18 @@ main_menu :-
     write('|-----------------------------|'), nl,
     write('| Escolha uma opcao: '),
     read(Option),
-    process_option(Option, 8).
+    process_option(Option, 8, 8).
 
 
 
 % Processa a escolha do usuário.
-process_option(1, Counter) :- % Humano vs Humano
+process_option(1, CounterR, CounterB) :- % Humano vs Humano
     initial_board(Board),
     clear,
-    choose_move(Board, Counter).
+    random_select(Color, [r, b], _Rest),
+    choose_move((Board, Color), CounterR, CounterB).
 
-process_option(2, Counter) :- % Humano vs Computador
+process_option(2, CounterR, CounterB) :- % Humano vs Computador
     initial_board(Board),
     clear,
     choose_bot_dif(Board).
@@ -77,27 +78,34 @@ continues(NewCounter, Board):-
     (Answer = yes -> place_piece(NewCounter, Board); true).
 
 
+choose_move((Board, Color), CounterR, CounterB):-
+    (check_six_maKING(Board, Winner) ->
+        write('The winner is: '),
+        write(Winner), nl,
+        write('Press Any Key to Continue'), nl,
+        read(Option),
+        play
+    ;
+        write('|-----------------------------|'), nl,
+        write('|         Choose Move         |'), nl,
+        write('|-----------------------------|'), nl,
+        write('| 1. Place piece              |'), nl,
+        write('| 2. Move Piece               |'), nl,
+        write('|-----------------------------|'), nl,
+        write('| Choose an option: '), nl,
+        read(Option),
+        process_choose_move(Option, (Board, Color), CounterR, CounterB)
+    ).
 
-
-choose_move(Board, Counter):-
-    write('|-----------------------------|'), nl,
-    write('|         Choose Move         |'), nl,
-    write('|-----------------------------|'), nl,
-    write('| 1. Place piece              |'), nl,
-    write('| 2. Move Piece               |'), nl,
-    write('|-----------------------------|'), nl,
-    write('| Choose an option: '), nl,
-    read(Option),
-    process_choose_move(Option, Board, Counter).
 
 
 %% Player chose to place a piece
-process_choose_move(1, Board, Counter):-
+process_choose_move(1, (Board, Color), CounterR, CounterB):-
     clear,
-    place_piece(Counter, Board).
+    place_piece(CounterR, CounterB, Board, Color).
 
 %% Player chose to move a already existing piece
-process_choose_move(2, Board, Counter):-
+process_choose_move(2, (Board, Color), CounterR, CounterB):-
     nl,
     write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
@@ -108,27 +116,44 @@ process_choose_move(2, Board, Counter):-
         (check_piece(Board, NewX, NewY) ->
             (validate_move(CurrentX, CurrentY, NewX, NewY, Length) ->
                 move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard), nl, nl, 
-                choose_move(UpdatedBoard, Counter)
+                switch_color(Color, NewColor),
+                choose_move((UpdatedBoard, NewColor), CounterR, CounterB)
             ; 
-                process_choose_move(2, Board, Counter)
+                process_choose_move(2, (Board, Color), CounterR, CounterB)
             )
         ;
             write('Must be an occupied cell. Please, try again.'), nl, nl, 
-            process_choose_move(2, Board, Counter)
+            process_choose_move(2, (Board, Color), CounterR, CounterB)
         );
         write('No piece found at the specified current position.'), nl, nl, 
-        process_choose_move(2, Board, Counter)
+        process_choose_move(2, (Board, Color), CounterR, CounterB)
     ).
 
 
 %% Place piece 
-place_piece(0, Board) :-
+place_piece(0, CounterB, Board, r) :-
     write('|-----------------------------|'), nl,
     write('|       All pieces placed!    |'), nl,
     write('|-----------------------------|'), nl, nl,  
-    display_board(Board, 0).
-place_piece(Counter, Board):-
-    Counter > 0,
+    display_board(Board, 0),
+    choose_move((Board, r), 0, CounterB).
+
+
+place_piece(CounterR, 0, Board, b) :-
+    write('|-----------------------------|'), nl,
+    write('|       All pieces placed!    |'), nl,
+    write('|-----------------------------|'), nl, nl,  
+    display_board(Board, 0),
+    choose_move((Board, b), CounterR, 0).
+
+hasPiecesLeft(CounterR, CounterB, r):-
+    CounterR > 0.
+
+hasPiecesLeft(CounterR, CounterB, b):-
+    CounterB > 0.
+
+place_piece(CounterR, CounterB, Board, Color):-
+    hasPiecesLeft(CounterR, CounterB, Color),
     write('|-----------------------------|'), nl,
     write('|    Choose Where to place    |'), nl,
     write('|-----------------------------|'), nl,
@@ -140,21 +165,9 @@ place_piece(Counter, Board):-
     write(X), write(','), write(Y),
     write(')'), nl,
 
-    run(r, X, Y, Board, UpdatedBoard, Counter, NewCounter),
-    continuesO(NewCounter, UpdatedBoard).
+    run(Color, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
+    choose_move((UpdatedBoard, NewColor), NewCounterR, NewCounterB).
   
-continuesO(NewCounter, Board):-
-    write('Do you want to place another piece? (yes/no)'), nl,
-    read(Answer),
-    (Answer = yes -> 
-        clear,
-        place_piece(NewCounter, Board)
-    ;   (Answer = no ->
-            clear,
-            choose_move(Board, NewCounter), nl
-        )
-    ).
-
 
 
 
