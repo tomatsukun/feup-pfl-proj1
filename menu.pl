@@ -127,7 +127,7 @@ place_piece_bot(CounterR, CounterB, Board, Color):-
     write(Rand_X), write(','), write(Rand_Y),
     write(')'), nl,
 
-    run_bot(b, 0, 0, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
+    run_bot(b, Rand_X, Rand_Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
     process_choose_bot_dif(1, CounterR, CounterB, UpdatedBoard).
 
 %% Bot chose to move a already existing piece
