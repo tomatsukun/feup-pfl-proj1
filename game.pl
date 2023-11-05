@@ -21,19 +21,19 @@ valid_horizontal_or_vertical_move_P(CurrentX, NewX, CurrentY, NewY) :-
 
 % R movement
 
-valid_horizontal_move_R(CurrentX, NewX, CurrentY, NewY) :-
+valid_horizontal_move_R(CurrentX, NewX) :-
     CurrentX =:= NewX,                   % Same row
     NewX >= 0, NewX < 5.
 
 % Check if the move is vertical (same column)
-valid_vertical_move_R(CurrentX, NewX, CurrentY, NewY) :-
+valid_vertical_move_R(CurrentY, NewY) :-
     CurrentY =:= NewY,                   % Same column
     NewY >= 0, NewY < 5.
 
 % Ensure the move is either horizontal or vertical
 valid_horizontal_or_vertical_move_R(CurrentX, NewX, CurrentY, NewY) :-
-    valid_horizontal_move_R(CurrentX, NewX, CurrentY, NewY);
-    valid_vertical_move_R(CurrentX, NewX, CurrentY, NewY).
+    valid_horizontal_move_R(CurrentX, NewX);
+    valid_vertical_move_R(CurrentY, NewY).
 
 % L movement
 valid_knight_move_1(CurrentX, NewX, CurrentY, NewY) :-
@@ -89,7 +89,7 @@ validate_move(CurrentX, CurrentY, NewX, NewY, 4):-
         false
     ).
 
-validate_move(CurrentX, CurrentY, NewX, NewY, 5):-
+validate_move(_CurrentX, _CurrentY, _NewX, _NewY, 5):-
     true.
 
 

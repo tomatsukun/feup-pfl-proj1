@@ -40,7 +40,7 @@ display_board([Row | Rest], Index) :-
     write(' |'),
     display_row(Row),
     NewIndex is Index + 1,
-    display_board(Rest, NewIndex), nl.
+    display_board(Rest, NewIndex).
 
 %estado inicial do board e o seu display
 initial_board(Board):-
@@ -88,7 +88,7 @@ find_row_remove([Row|Rows], RowIndex, Column, [Row|UpdatedRows]) :-
     find_row_remove(Rows, NewRowIndex, Column, UpdatedRows).
 
 % Predicate to replace the value in a specific column in a row
-find_col_remove([[Top | Rest] |Columns], 0, [Rest | Columns]).
+find_col_remove([[_Top | Rest] |Columns], 0, [Rest | Columns]).
 find_col_remove([Column|Columns], ColumnIndex, [Column|UpdatedColumns]) :-
     write('3'), nl,
     ColumnIndex > 0,
@@ -122,11 +122,11 @@ new_XY_run_bot(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, Ne
 
 
 
-run(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
-insert_piece(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
+
+insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
-            write('Already occupied. Choose another cell.'), nl,
+            write('Already occupied. Choose another cell.'),
             UpdatedBoard = Board,
             write('     0     1     2     3     4'), nl, 
             display_board(Board, 0),
@@ -150,7 +150,7 @@ insert_piece(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewC
         NewColor = r
     ).
 
-insert_piece(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
+insert_piece(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
             write('Already occupied. Choose another cell.'), nl,
