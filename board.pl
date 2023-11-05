@@ -123,6 +123,7 @@ new_XY_run_bot(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, Ne
 
 
 run(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
+insert_piece(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
             write('Already occupied. Choose another cell.'), nl,
@@ -149,7 +150,7 @@ run(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, 
         NewColor = r
     ).
 
-run(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
+insert_piece(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
             write('Already occupied. Choose another cell.'), nl,
