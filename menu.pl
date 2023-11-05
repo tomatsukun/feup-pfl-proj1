@@ -86,7 +86,7 @@ process_choose_move_vsbot(1, Board, Color, Counters):-
 %% Player chose to move a piece
 process_choose_move_vsbot(2, Board, Color, Counters):-
     clear,
-    process_choose_move(2, Board, Color, Counters).
+    move_piece_pvsbot(Board, Color, Counters).
 
 place_piece_pvsbot((0, CounterB), Board, r) :-
     write('|-----------------------------|'), nl,
@@ -116,24 +116,54 @@ place_piece_pvsbot(Counters, Board, Color):-
     write(X), write(','), write(Y),
     write(')'), nl,
 
+    %player coloca a peça
     insert_piece(r, X, Y, Board, UpdatedBoard, Counters, NewCounters, NewColor),
 
     %% bot escolhe se mete ou move
-    random(1, 6, RandNumber), % escolhe random se vai mover ou clocar nova peça sendo a chance de mover supostamente 20%
-    ( RandNumber = 2 -> 
+    random(1, 6, RandNumber), % escolhe random se vai mover ou colocar nova peça sendo a chance de mover supostamente 20%
+    ( 0 = 2 -> %% o bot nao vai coiseguir mover só colocar novas peças
         move_piece_bot(NewCounters, UpdatedBoard,  NewColor)
       ; 
         place_piece_bot(NewCounters, UpdatedBoard, NewColor)
         
     ).
 
+move_piece_pvsbot(Board, Color, Counters):-
+write('Enter the current position (X-Y) of the piece you want to move: '), nl,
+    read(CurrentX-CurrentY),
+    (check_piece(Board, CurrentX, CurrentY) ->
+        get_length(Board, CurrentX, CurrentY, Length), 
+        write('Enter the new position (X-Y) for the piece: '), nl, 
+        read(NewX-NewY),
+        (check_piece(Board, NewX, NewY) ->
+            (validate_move(CurrentX, CurrentY, NewX, NewY, Length) ->
+                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard), nl,
+                switch_color(Color, NewColor),
+                place_piece_bot(Counters,UpdatedBoard, NewColor),
+                choose_move(UpdatedBoard, NewColor, Counters)
+            ; 
+                choose_move(Board, Color, Counters)
+            )
+        ;
+            write('Must be an occupied cell. Please, try again.'), nl,
+            choose_move(Board, Color, Counters)
+        );
+        write('No piece found at the specified current position.'), nl, 
+        choose_move(Board, Color, Counters)
+    ).
+
+
+
+
 
 move_piece_bot( (NewCounterR, NewCounterB) , UpdatedBoard,  NewColor):-
   ( NewCounterB = 8 -> %% obriga o bot a por sempre uma peça na primeira jogada
       place_piece_bot((NewCounterR, NewCounterB), UpdatedBoard, NewColor)
+      
     
   ;
-    write('Teste counter =/= 8')
+    write('Bot moves piece'),nl
+    
   ).
 
 
