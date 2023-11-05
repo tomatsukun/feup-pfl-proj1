@@ -57,7 +57,7 @@ choose_bot_dif(Board):-
 
 process_choose_bot_dif(1, CounterR, CounterB, Board):-
     %random(1, 3, RandNumber), % escolhe random se vai mover ou clocar nova peça
-    random_select(Color, [r,b], _Rest),
+    %random_select(Color, [r,b], _Rest),
      (check_six_maKING(Board, Winner) ->
         write('The winner is: '),
         write(Winner), nl,
@@ -74,21 +74,21 @@ process_choose_bot_dif(1, CounterR, CounterB, Board):-
         write('| Choose an option: '), nl,
         read(Option),
         %clear,
-        process_choose_move_vsbot(Option, (Board, Color), CounterR, CounterB)
+        process_choose_move_vsbot(Option, Board, Color, CounterR, CounterB)
     ), % turno do player
     write('Chega aqui'),nl,
     ( 1 = 1 ->  
     write('Bot placed a Piece!'),nl ; write('Bot moves piece'),nl ).
     
 %% Player chose to place a piece
-process_choose_move_vsbot(1, (Board, Color), CounterR, CounterB):-
+process_choose_move_vsbot(1, Board, Color, CounterR, CounterB):-
     clear,
     place_piece_pvsbot(CounterR, CounterB, Board, Color).
 
 %% Player chose to move a piece
-process_choose_move_vsbot(2, (Board, Color), CounterR, CounterB):-
+process_choose_move_vsbot(2, Board, Color, CounterR, CounterB):-
     clear,
-    process_choose_move(2, (Board, Color), CounterR, CounterB).
+    process_choose_move(2, Board, Color, CounterR, CounterB).
 
 place_piece_pvsbot(0, CounterB, Board, r) :-
     write('|-----------------------------|'), nl,
@@ -135,7 +135,7 @@ place_piece_bot(CounterR, CounterB, Board, Color):-
     process_choose_bot_dif(1, CounterR, CounterB, UpdatedBoard).
 
 %% Bot chose to move a already existing piece
-process_choose_move_bot(2, (Board, Color), CounterR, CounterB):-
+process_choose_move_bot(2, Board, Color, CounterR, CounterB):-
     nl,
     write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
@@ -156,7 +156,7 @@ process_choose_move_bot(2, (Board, Color), CounterR, CounterB):-
             process_choose_move(2, (Board, Color), CounterR, CounterB)
         );
         write('No piece found at the specified current position.'), nl, nl, 
-        process_choose_move(2, (Board, Color), CounterR, CounterB)
+        process_choose_move(2, Board, Color, CounterR, CounterB)
     ).
 
 
