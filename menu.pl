@@ -40,8 +40,6 @@ process_option(2, CounterR, CounterB) :- % Humano vs Computador
     clear,
     choose_bot_dif(Board).
     
-
-
 choose_bot_dif(Board):-
     write('|-----------------------------|'), nl,
     write('|    Choose Bot Difficulty    |'), nl,
@@ -51,26 +49,85 @@ choose_bot_dif(Board):-
     write('|-----------------------------|'), nl,
     write('| Escolha uma opcao: '),
     read(Option),
-    process_choose_bot_dif(Option,Board).
+    process_choose_bot_dif(Option, 8, 8, Board).
 
-process_choose_bot_dif(1,Board):-
-    clear,
-    %%choose_move(Board), % turno do player
-    random(1, 3, RandNumber), % escolhe random se vai mover ou clocar nova peça
-    random(0, 6, Rand_X),
-    random(0, 6, Rand_Y),
-    ( 1 = 1 -> place_piece_bot(Rand_X-Rand_Y,Board) ; write('Bot moves piece') ).
+process_choose_bot_dif(1, CounterR, CounterB, Board):-
+    %random(1, 3, RandNumber), % escolhe random se vai mover ou clocar nova peça
+    random_select(Color, [r,b], _Rest),
+     (check_six_maKING(Board, Winner) ->
+        write('The winner is: '),
+        write(Winner), nl,
+        write('Press Any Key to Continue'), nl,
+        read(Option),
+        play
+    ;
+        write('|-----------------------------|'), nl,
+        write('|         Choose Move         |'), nl,
+        write('|-----------------------------|'), nl,
+        write('| 1. Place piece              |'), nl,
+        write('| 2. Move Piece               |'), nl,
+        write('|-----------------------------|'), nl,
+        write('| Choose an option: '), nl,
+        read(Option),
+        clear,
+        process_choose_move_vsbot(Option, (Board, Color), CounterR, CounterB)
+    ), % turno do player
+    write('Chega aqui'),nl,
+    ( 1 = 1 ->  
+    write('Bot placed a Piece!'),nl ; write('Bot moves piece'),nl ).
     
+    
+process_choose_move_vsbot(Option, (Board, Color), CounterR, CounterB):-
+    clear,
+    place_piece_pvsbot(CounterR, CounterB, Board, Color).
+
+place_piece_pvsbot(0, CounterB, Board, r) :-
+    write('|-----------------------------|'), nl,
+    write('|       All pieces placed!    |'), nl,
+    write('|-----------------------------|'), nl, nl,  
+    display_board(Board, 0).
+    %%choose_move((Board, r), 0, CounterB).
 
 
-place_piece_bot(X-Y, Board):-
+place_piece_pvsbot(CounterR, 0, Board, b) :-
+    write('|-----------------------------|'), nl,
+    write('|       All pieces placed!    |'), nl,
+    write('|-----------------------------|'), nl, nl,  
+    display_board(Board, 0).
+    %%choose_move((Board, b), CounterR, 0).
+
+place_piece_pvsbot(CounterR, CounterB, Board, Color):-
+    hasPiecesLeft(CounterR, CounterB, Color),
+    write('|-----------------------------|'), nl,
+    write('|    Choose Where to place    |'), nl,
+    write('|-----------------------------|'), nl,
+    write('| X-Y of the piece |'), nl,
+    read(X-Y),
+
     write('New piece cords '),
     write('('),
     write(X), write(','), write(Y),
     write(')'), nl,
 
-    run(r,X, Y, Board, UpdatedBoard, Counter, NewCounter),
-    continues(NewCounter, UpdatedBoard).
+    run(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
+    place_piece_bot(NewCounterR, NewCounterB, UpdatedBoard, NewColor).
+
+
+place_piece_bot(CounterR, CounterB, Board, Color):-
+    hasPiecesLeft(CounterR, CounterB, Color),
+    random(0, 5, Rand_X),
+    random(0, 5, Rand_Y),
+    write('Bot placed new piece  '),
+    write('('),
+    write(Rand_X), write(','), write(Rand_Y),
+    write(')'), nl,
+
+    run(b, Rand_X, Rand_Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
+    process_choose_bot_dif(1, CounterR, CounterB, UpdatedBoard).
+
+
+
+
   
 continues(NewCounter, Board):-
     write('Do you want to place another piece? (yes/no)'), nl,
