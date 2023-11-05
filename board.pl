@@ -98,6 +98,30 @@ find_col_remove([Column|Columns], ColumnIndex, [Column|UpdatedColumns]) :-
     find_col_remove(Columns, NewColumnIndex, UpdatedColumns).
 
 
+% ( condition -> then_clause ; else_clause )
+%% run for bot
+run_bot(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
+  ( \+check_piece(Board, X, Y) ->
+      update_board(Board, X, Y, b, UpdatedBoard),
+      write('     0     1     2     3     4'), nl, 
+      display_board(UpdatedBoard, 0),
+      NewCounterB is CounterB - 1,
+      NewCounterR = CounterR,
+      switch_color(b, NewColor)
+  ; 
+  %% if already existes a piece in that position
+      new_XY_run_bot(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor)
+  ).
+    
+
+new_XY_run_bot(b, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
+  random(0, 5, Rand_X),
+  random(0, 5, Rand_Y),
+  run_bot(b, Rand_X, Rand_Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor).
+
+
+
+
 run(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->

@@ -69,17 +69,22 @@ process_choose_bot_dif(1, CounterR, CounterB, Board):-
         write('|-----------------------------|'), nl,
         write('| Choose an option: '), nl,
         read(Option),
-        clear,
+        %clear,
         process_choose_move_vsbot(Option, (Board, Color), CounterR, CounterB)
     ), % turno do player
     write('Chega aqui'),nl,
     ( 1 = 1 ->  
     write('Bot placed a Piece!'),nl ; write('Bot moves piece'),nl ).
     
-    
-process_choose_move_vsbot(Option, (Board, Color), CounterR, CounterB):-
+%% Player chose to place a piece
+process_choose_move_vsbot(1, (Board, Color), CounterR, CounterB):-
     clear,
     place_piece_pvsbot(CounterR, CounterB, Board, Color).
+
+%% Player chose to move a piece
+process_choose_move_vsbot(2, (Board, Color), CounterR, CounterB):-
+    clear,
+    process_choose_move(2, (Board, Color), CounterR, CounterB).
 
 place_piece_pvsbot(0, CounterB, Board, r) :-
     write('|-----------------------------|'), nl,
@@ -122,9 +127,33 @@ place_piece_bot(CounterR, CounterB, Board, Color):-
     write(Rand_X), write(','), write(Rand_Y),
     write(')'), nl,
 
-    run(b, Rand_X, Rand_Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
+    run_bot(b, 0, 0, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
     process_choose_bot_dif(1, CounterR, CounterB, UpdatedBoard).
 
+%% Bot chose to move a already existing piece
+process_choose_move_bot(2, (Board, Color), CounterR, CounterB):-
+    nl,
+    write('Enter the current position (X-Y) of the piece you want to move: '), nl,
+    read(CurrentX-CurrentY),
+    (check_piece(Board, CurrentX, CurrentY) ->
+        get_length(Board, CurrentX, CurrentY, Length), 
+        write('Enter the new position (X-Y) for the piece: '), nl, 
+        read(NewX-NewY),
+        (check_piece(Board, NewX, NewY) ->
+            (validate_move(CurrentX, CurrentY, NewX, NewY, Length) ->
+                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard), nl, nl, 
+                switch_color(Color, NewColor),
+                choose_move((UpdatedBoard, NewColor), CounterR, CounterB)
+            ; 
+                process_choose_move(2, (Board, Color), CounterR, CounterB)
+            )
+        ;
+            write('Must be an occupied cell. Please, try again.'), nl, nl, 
+            process_choose_move(2, (Board, Color), CounterR, CounterB)
+        );
+        write('No piece found at the specified current position.'), nl, nl, 
+        process_choose_move(2, (Board, Color), CounterR, CounterB)
+    ).
 
 
 
