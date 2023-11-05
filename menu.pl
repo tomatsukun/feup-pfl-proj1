@@ -118,7 +118,7 @@ place_piece_pvsbot(CounterR, CounterB, Board, Color):-
     write(X), write(','), write(Y),
     write(')'), nl,
 
-    run(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
+    insert_piece(r, X, Y, Board, UpdatedBoard, CounterR, CounterB, NewCounterR, NewCounterB, NewColor),
     place_piece_bot(NewCounterR, NewCounterB, UpdatedBoard, NewColor).
 
 
