@@ -306,7 +306,7 @@ process_choose_move(2, Board, Color, Counters):-
         read(NewX-NewY),
         (check_piece(Board, NewX, NewY) ->
             (validate_move(CurrentX, CurrentY, NewX, NewY, Length) ->
-                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, UpdatedBoard), nl,
+                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, UpdatedBoard), nl,
                 switch_color(Color, NewColor),
                 choose_move(UpdatedBoard, NewColor, Counters)
             ; 
