@@ -26,7 +26,7 @@ main_menu :-
     read(Option),
     process_option(Option, (8, 8)).
 
-% Processes the user's choice..
+% Processes the user choice..
 process_option(1, Counters) :- % Human vs Human
     initial_board(Board),
     clear,
