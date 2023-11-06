@@ -227,7 +227,7 @@ place_piece_pvsbot(Counters, Board, Color):-
     ).
 
 % Moves piece Player vs Bot
-move_piece_pvsbot(Board, Color, Counters):-
+move_piece_pvsbot(Board, _Color, Counters):-
 write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
     (check_piece(Board, CurrentX, CurrentY) ->
