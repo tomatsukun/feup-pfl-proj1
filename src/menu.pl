@@ -27,6 +27,7 @@ main_menu :-
     process_option(Option, (8, 8)).
 
 % Processes the user choice..
+% process_option(+Option, +Counters)
 process_option(1, Counters) :- % Human vs Human
     initial_board(Board),
     clear,
@@ -48,7 +49,8 @@ process_option(4, _). % leave
 
 % -------------------- PLAYER -------------------------
 
-
+% menu to display moves the user can do
+% choose_move(+Board, +Color, +Counters)
 choose_move(Board, Color, Counters):-
     (game_over(Board, Winner) ->
         write('The winner is: '),
@@ -70,7 +72,8 @@ choose_move(Board, Color, Counters):-
         process_choose_move(Option, Board, Color, Counters)
     ).
 
-%% Player chose to place a piece
+% Player choose to place a piece
+% process_choose_move(+Option, +Board, +Color, +Counters)
 process_choose_move(1, Board, Color, Counters):-
     clear,
     place_piece(Counters, Board, Color).
@@ -79,6 +82,8 @@ process_choose_move(1, Board, Color, Counters):-
 process_choose_move(2, Board, Color, Counters):-
     move_piece(Board, Color, Counters).
 
+% moves a piece
+% move_piece(+Board, +Color, +Counters)
 move_piece(Board, Color, Counters):-
     write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
@@ -102,6 +107,7 @@ move_piece(Board, Color, Counters):-
     ).
 
 % Player r has pieces left
+% hasPiecesLeft((+CounterR, +CounterB), +Color)
 hasPiecesLeft((CounterR, _CounterB), r):-
     CounterR > 0.
 
@@ -109,7 +115,8 @@ hasPiecesLeft((CounterR, _CounterB), r):-
 hasPiecesLeft((_CounterR, CounterB), b):-
     CounterB > 0.
 
-%% Place piece 
+% Place a piece 
+% place_piece((+CounterR, +CounterB), +Board, +Color)
 place_piece((0, CounterB), Board, r) :-
     nl,
     write('|-----------------------------|'), nl,
@@ -139,30 +146,6 @@ place_piece(Counters, Board, Color):-
     write(')'), nl,
     insert_piece(Color, X, Y, Board, UpdatedBoard, Counters, NewCounters, NewColor),
     choose_move(UpdatedBoard, NewColor, NewCounters).
-  
-%% Move piece 
-move_piece:-
-  write('|-----------------------------|'), nl,
-  write('|    Choose Piece to Move     |'), nl,
-  write('|-----------------------------|'), nl,
-  write('| X of the piece |'), nl,
-  read(X_old),
-  write('| Y of the piece |'), nl,
-  read(Y_old),
-  write('|-----------------------------|'), nl,
-  write('|    Choose Where to Move     |'), nl,
-  write('|-----------------------------|'), nl,
-  write('| New X of the piece |'), nl,
-  read(X_new),
-  write('| New Y of the piece |'), nl,
-  read(Y_new),
-  process_move_piece(X_old-Y_old, X_new-Y_new ).
-
-process_move_piece(X_old-Y_old, X_new-Y_new ):-
-  write('| Old X = |'), write(X_old),nl,
-  write('| New X = |'), write(X_new),nl,
-  write('| Old Y = |'), write(Y_old),nl,
-  write('| New Y = |'), write(Y_new).
 
 % ------------------PLAYER vs COMPUTER ------------------
 
