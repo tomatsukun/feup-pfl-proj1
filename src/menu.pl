@@ -253,7 +253,7 @@ write('Enter the current position (X-Y) of the piece you want to move: '), nl,
         read(NewX-NewY),
         (check_piece(Board, NewX, NewY) ->
             (validate_move(CurrentX, CurrentY, NewX, NewY, Length) ->
-                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, NewColor, UpdatedBoard), nl,
+                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Color, NewColor, UpdatedBoard), nl,
                 place_piece_bot(Counters,UpdatedBoard, NewColor)
             ; 
                 process_choose_bot_dif(1, Board, Counters)

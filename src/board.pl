@@ -131,8 +131,7 @@ run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
       write('     0     1     2     3     4'), nl, 
       display_board(UpdatedBoard, 0),
       NewCounterR is CounterR - 1,
-      NewCounterB = CounterB,
-      switch_color(r, NewColor)
+      NewCounterB = CounterB
   ; 
   %% if already existes a piece in that position
       new_XY_run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor)
