@@ -48,8 +48,6 @@ process_option(4, _). % leave
 
 % -------------------- PLAYER -------------------------
 
-get_player_name(r, 'Red').
-get_player_name(b, 'Blue').
 
 choose_move(Board, Color, Counters):-
     (game_over(Board, Winner) ->
@@ -182,7 +180,7 @@ choose_bot_dif(Board, Counters):-
 
 % Processes the choice of bot difficulty
 process_choose_bot_dif(1, Board, Counters):-
-     (check_six_maKING(Board, Winner) ->
+     (game_over(Board, Winner) ->
         write('The winner is: '),
         write(Winner), nl,
         write('Press Any Key to Continue'), nl,
@@ -328,7 +326,7 @@ choose_bot_dif_bvb(Board, Counters, Color):-
 
 % Processes Bot difficulty in Bot vs Bot
 process_choose_bot_dif_bvb(1, Board, Counters, Color):-
-  (check_six_maKING(Board, Winner) ->
+  (game_over(Board, Winner) ->
         write('The winner is: '),
         write(Winner), nl,
         write('Press Any Key to Continue'), nl,
