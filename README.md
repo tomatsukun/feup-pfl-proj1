@@ -197,6 +197,9 @@ Validation of King move: King has no validation as it means the player has win t
 
 
 ### List of Valid Moves
+We don't generate a list of valid moves, instead, we generate X-Y values that are already valid so we have no need to adicional verification.
+
+
 
 ### End of Game
 
@@ -212,6 +215,8 @@ It will transverse all the rows of the board, and then all the stacks of the row
 ![end](images/gameover.png)
 
 ### Game State Evaluation
+Since we don't generate a list of valid moves we cant evaluate the state of the board.
+
 
 ### Computer Plays
 Before starting the game, the bot's difficulty is asked and if the bot selected is easy, the bot will choose between placing or moving a piece, with the probability of moving being chosen 20%. If place is chosen, it is selected if the bot has pieces to place checked by the hasPiecesLeft/2 predicate and an X-Y pair will be generated randomly through the random_XY_generator/2 predicate. The run_bot/8 predicate is then called, which places the piece in the generated coordinates and if the generated coordinates are from an existing piece, it generates new coordinates through the new_XY_run_bot/8 predicate. If you choose to move a piece, the bot generates an piece, and checks again if there is that piece on the board. It makes sure there is a valid move, via the valid_move_bot/5 predicate, and move the piece to that new position.
