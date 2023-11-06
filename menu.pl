@@ -41,6 +41,50 @@ process_option(2, Counters) :- % Humano vs Computador
     clear,
     choose_bot_dif(Board, Counters).
 
+process_option(3, Counters) :- % Computador vs Computador
+    initial_board(Board),
+    clear,
+    random_select(Color, [r], _Rest),
+    choose_bot_dif_bvb(Board, Counters, Color).
+
+
+choose_bot_dif_bvb(Board, Counters, Color):-
+    write('|-----------------------------|'), nl,
+    write('|    Choose Bot Difficulty    |'), nl,
+    write('|-----------------------------|'), nl,
+    write('| 1. Easy                     |'), nl,
+    write('| 2. Hard                     |'), nl,
+    write('|-----------------------------|'), nl,
+    write('| Escolha uma opcao: '),
+    read(Option),
+    process_choose_bot_dif_bvb(Option, Board, Counters, Color).
+
+
+process_choose_bot_dif_bvb(1, Board, Counters, Color):-
+  (check_six_maKING(Board, Winner) ->
+        write('The winner is: '),
+        write(Winner), nl,
+        write('Press Any Key to Continue'), nl,
+        read(Option),
+        play
+    ;
+      %bot1
+      write('Teste'),nl,
+      random_XY_generator(Rand_X1, Rand_Y1),
+
+      place_piece_bot_bvb(Counters, Board, Color)
+
+
+      %bot2
+      %random_XY_generator(Rand_X2, Rand_Y2),
+      %place_piece_bot(Counters, Board, b)
+    
+    ). 
+
+
+
+
+
 process_option(4, _). % sair
     
     
@@ -199,13 +243,18 @@ move_piece_bot((NewCounterR, NewCounterB), Board, Color):-
 
 
 
-
+place_piece_bot_bvb(Counters, Board, Color):-
+    hasPiecesLeft(Counters, Color),
+    random_XY_generator(Rand_X,Rand_Y),
+    run_bot(Color, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor),
+    process_choose_bot_dif_bvb(1, UpdatedBoard, NewCounters, NewColor).
+    
 
 
 place_piece_bot(Counters, Board, Color):-
     hasPiecesLeft(Counters, Color),
     random_XY_generator(Rand_X,Rand_Y),
-    run_bot(b, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor),
+    run_bot(Color, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor),
     process_choose_bot_dif(1, UpdatedBoard, NewCounters).
 
 
