@@ -16,8 +16,7 @@ choose_cell([b | _], 2, ' 2 ').
 choose_cell([b | _], 3, ' 3 ').
 choose_cell([b | _], 4, ' 4 ').
 choose_cell([b | _], 5, ' 5 ').
-choose_cell([b | _], 6, ' 6 ').
-
+choose_cell([b | _], 6, ' 6 '). 
 choose_cell(_, 0, '   ').
 
 
@@ -75,27 +74,24 @@ replace_in_row([Column|Columns], ColumnIndex, Value, [Column|UpdatedColumns]) :-
 
 
 % Predicate to update the board at a specific Row, Column with Value
-remove_from_stack(Board, Row, Column, UpdatedBoard) :-
-    find_row_remove(Board, Row, Column, UpdatedBoard).
+remove_from_stack(Board, Row, Column, Piece, UpdatedBoard) :-
+    find_row_remove(Board, Row, Column, Piece, UpdatedBoard).
 
 % Predicate to replace the value at Row, Column in the board
-find_row_remove([Row|Rows], 0, Column, [UpdatedRow|Rows]) :-
-    find_col_remove(Row, Column, UpdatedRow).
+find_row_remove([Row|Rows], 0, Column, Piece, [UpdatedRow|Rows]) :-
+    find_col_remove(Row, Column, Piece, UpdatedRow).
 
-find_row_remove([Row|Rows], RowIndex, Column, [Row|UpdatedRows]) :-
+find_row_remove([Row|Rows], RowIndex, Column, Piece, [Row|UpdatedRows]) :-
     RowIndex > 0,
     NewRowIndex is RowIndex - 1,
-    find_row_remove(Rows, NewRowIndex, Column, UpdatedRows).
+    find_row_remove(Rows, NewRowIndex, Column, Piece, UpdatedRows).
 
 % Predicate to replace the value in a specific column in a row
-find_col_remove([[_Top | Rest] |Columns], 0, [Rest | Columns]).
-find_col_remove([Column|Columns], ColumnIndex, [Column|UpdatedColumns]) :-
-    write('3'), nl,
+find_col_remove([[Piece | Rest] |Columns], 0, Piece, [Rest | Columns]).
+find_col_remove([Column|Columns], ColumnIndex, Piece, [Column|UpdatedColumns]) :-
     ColumnIndex > 0,
-    write(ColumnIndex), nl,
-    write('4'), nl,
     NewColumnIndex is ColumnIndex - 1,
-    find_col_remove(Columns, NewColumnIndex, UpdatedColumns).
+    find_col_remove(Columns, NewColumnIndex, Piece, UpdatedColumns).
 
 
 % ( condition -> then_clause ; else_clause )
@@ -137,7 +133,7 @@ random_XY_generator(Rand_X,Rand_Y):-
 insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
-            write('Already occupied. Choose another cell.'),
+            write('Already occupied. Choose another cell.'), nl,
             UpdatedBoard = Board,
             write('     0     1     2     3     4'), nl, 
             display_board(Board, 0),
@@ -198,8 +194,8 @@ check_piece(Board, X, Y) :-
     Cell \= [].                   % Check if the cell is not empty
 
 
-move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Piece, UpdatedBoard) :-
-    remove_from_stack(Board, CurrentX, CurrentY, TempBoard),
+move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, UpdatedBoard) :-
+    remove_from_stack(Board, CurrentX, CurrentY, Piece, TempBoard),
     update_board(TempBoard, NewX, NewY, Piece, UpdatedBoard),
     write('     0     1     2     3     4'), nl,
     display_board(UpdatedBoard, 0).
