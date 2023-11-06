@@ -256,16 +256,16 @@ write('Enter the current position (X-Y) of the piece you want to move: '), nl,
                 move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, r, NewColor, UpdatedBoard), nl,
                 switch_color(Color, NewColor),
                 place_piece_bot(Counters,UpdatedBoard, NewColor),
-                choose_move(UpdatedBoard, NewColor, Counters)
+                process_choose_bot_dif(1, Board, Counters)
             ; 
-                choose_move(Board, Color, Counters)
+                process_choose_bot_dif(1, Board, Counters)
             )
         ;
             write('Must be an occupied cell. Please, try again.'), nl,
-            choose_move(Board, Color, Counters)
+            process_choose_bot_dif(1, Board, Counters)
         );
         write('No piece found at the specified current position.'), nl, 
-        choose_move(Board, Color, Counters)
+        process_choose_bot_dif(1, Board, Counters)
     ).
 
 % Places bot piece
