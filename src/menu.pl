@@ -195,7 +195,7 @@ process_choose_bot_dif(1, Board, Counters):-
         write('|-----------------------------|'), nl,
         write('| Choose an option: '),
         read(Option),nl,
-        process_choose_move_vsbot(Option, Board, Color, Counters)
+        process_choose_move_vsbot(Option, Board, _Color, Counters)
     ). 
     
 
