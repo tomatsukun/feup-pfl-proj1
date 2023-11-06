@@ -141,7 +141,7 @@ next_player(botF, botD, botF-botD).
 next_player(botD, botF, botF-botD).
 
 
-check_six_maKING(Board, Winner) :-
+game_over(Board, Winner) :-
     member(Rows, Board),
     member(Stack, Rows),
     length(Stack, 6),

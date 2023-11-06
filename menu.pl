@@ -48,11 +48,14 @@ process_option(4, _). % leave
 
 % -------------------- PLAYER -------------------------
 
-% Choses the type of move
+get_player_name(r, 'Red').
+get_player_name(b, 'Blue').
+
 choose_move(Board, Color, Counters):-
-    (check_six_maKING(Board, Winner) ->
+    (game_over(Board, Winner) ->
         write('The winner is: '),
-        write(Winner), nl,
+        get_player_name(Winner, Player),
+        write(Player), nl,
         write('Press Any Key to Continue'), nl,
         read(Option),
         play
@@ -76,6 +79,9 @@ process_choose_move(1, Board, Color, Counters):-
 
 %% Player chose to move a already existing piece
 process_choose_move(2, Board, Color, Counters):-
+    move_piece(Board, Color, Counters).
+
+move_piece(Board, Color, Counters):-
     write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
     (check_piece(Board, CurrentX, CurrentY) ->
@@ -84,8 +90,7 @@ process_choose_move(2, Board, Color, Counters):-
         read(NewX-NewY),
         (check_piece(Board, NewX, NewY) ->
             (validate_move(CurrentX, CurrentY, NewX, NewY, Length) ->
-                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, UpdatedBoard), nl,
-                switch_color(Color, NewColor),
+                move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Color, NewColor, UpdatedBoard), nl,
                 choose_move(UpdatedBoard, NewColor, Counters)
             ; 
                 choose_move(Board, Color, Counters)
@@ -112,7 +117,7 @@ place_piece((0, CounterB), Board, r) :-
     write('|-----------------------------|'), nl,
     write('|       All pieces placed!    |'), nl,
     write('|-----------------------------|'), nl, nl,  
-    display_board(Board, 0),
+    display_game((Board, r)),
     choose_move(Board, r, (0, CounterB)).
 
 place_piece((CounterR, 0), Board, b) :-
@@ -120,7 +125,7 @@ place_piece((CounterR, 0), Board, b) :-
     write('|-----------------------------|'), nl,
     write('|       All pieces placed!    |'), nl,
     write('|-----------------------------|'), nl, nl,  
-    display_board(Board, 0),
+    display_game((Board, b)),
     choose_move(Board, b, (CounterR, 0)).
 
 place_piece(Counters, Board, Color):-

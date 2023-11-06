@@ -41,7 +41,18 @@ display_board([Row | Rest], Index) :-
     NewIndex is Index + 1,
     display_board(Rest, NewIndex).
 
-% Initial state of the board and its display
+get_player_name(r, 'Red').
+get_player_name(b, 'Blue').
+
+display_game((Board, Color)):-
+    nl,
+    write('     0     1     2     3     4'), nl, 
+    display_board(Board, 0), nl, 
+    write('Next player turn: '),
+    get_player_name(Color, Player),
+    write(Player), nl.
+
+%estado inicial do board e o seu display
 initial_board(Board):-
     Board = [
         [[], [], [], [], []],
@@ -148,24 +159,21 @@ insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, N
         (check_piece(Board, X, Y) ->
             write('Already occupied. Choose another cell.'), nl,
             UpdatedBoard = Board,
-            write('     0     1     2     3     4'), nl, 
-            display_board(Board, 0),
+            display_game((Board, r)),
             NewCounterR = CounterR,
             NewCounterB = CounterB,
             NewColor = r,
             process_choose_bot_dif(1, UpdatedBoard, (NewCounterR, NewCounterB))
         ; 
             update_board(Board, X, Y, r, UpdatedBoard),
-            write('     0     1     2     3     4'), nl, 
-            display_board(UpdatedBoard, 0),
             NewCounterR is CounterR - 1,
             NewCounterB = CounterB,
-            switch_color(r, NewColor)
+            switch_color(r, NewColor),
+            display_game((UpdatedBoard, NewColor))
         );
         write('Invalid coordinates. Please choose within the board.'), nl, 
         UpdatedBoard = Board, % Maintain the board state if coordinates are invalid
-        write('     0     1     2     3     4'), nl, 
-        display_board(Board, 0),
+        display_game((Board, r)),
         NewCounterR = CounterR,
         NewCounterB = CounterB,
         NewColor = r
@@ -177,23 +185,20 @@ insert_piece(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, N
         (check_piece(Board, X, Y) ->
             write('Already occupied. Choose another cell.'), nl,
             UpdatedBoard = Board,
-            write('     0     1     2     3     4'), nl, 
-            display_board(Board, 0),
+            display_game((Board, b)),
             NewCounterB = CounterB,
             NewCounterR = CounterR,
             NewColor = b
         ; 
             update_board(Board, X, Y, b, UpdatedBoard),
-            write('     0     1     2     3     4'), nl, 
-            display_board(UpdatedBoard, 0),
             NewCounterB is CounterB - 1,
             NewCounterR = CounterR,
-            switch_color(b, NewColor)
+            switch_color(b, NewColor),
+            display_game((UpdatedBoard, NewColor))
         );
         write('Invalid coordinates. Please choose within the board.'), nl, 
         UpdatedBoard = Board, % Maintain the board state if coordinates are invalid
-        write('     0     1     2     3     4'), nl, 
-        display_board(Board, 0),
+        display_game((Board, b)),
         NewCounterB = CounterB,
         NewCounterR = CounterR,
         NewColor = b
@@ -210,14 +215,13 @@ check_piece(Board, X, Y) :-
     nth0(Y, Row, Cell),           % Get the Y-th element in that row
     Cell \= [].                   % Check if the cell is not empty
 
-% Move piece logic
-move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, UpdatedBoard) :-
+
+move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Color, NewColor, UpdatedBoard) :-
     remove_from_stack(Board, CurrentX, CurrentY, Piece, TempBoard),
     update_board(TempBoard, NewX, NewY, Piece, UpdatedBoard),
-    write('     0     1     2     3     4'), nl,
-    display_board(UpdatedBoard, 0).
-
-
+    switch_color(Color, NewColor),
+    display_game((UpdatedBoard, NewColor)).
+    
 get_length(Board, CurrentX, CurrentY, Length):-
     nth0(CurrentX, Board, Row),          % Get the X-th row
     nth0(CurrentY, Row, Cell),           % Get the Y-th element in that row
