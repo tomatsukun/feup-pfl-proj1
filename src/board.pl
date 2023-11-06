@@ -162,8 +162,7 @@ insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, N
             display_game((Board, r)),
             NewCounterR = CounterR,
             NewCounterB = CounterB,
-            NewColor = r,
-            process_choose_bot_dif(1, UpdatedBoard, (NewCounterR, NewCounterB))
+            NewColor = r
         ; 
             update_board(Board, X, Y, r, UpdatedBoard),
             NewCounterR is CounterR - 1,
