@@ -94,7 +94,7 @@ find_col_remove([Column|Columns], ColumnIndex, Piece, [Column|UpdatedColumns]) :
     find_col_remove(Columns, NewColumnIndex, Piece, UpdatedColumns).
 
 
-%% run for bot
+%% Incert piece for bot
 run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
   ( \+check_piece(Board, X, Y) ->
       update_board(Board, X, Y, b, UpdatedBoard),
@@ -114,6 +114,7 @@ run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
       new_XY_run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor)
   ).
 
+% Incert piece for bot
 run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
   ( \+check_piece(Board, X, Y) ->
       update_board(Board, X, Y, r, UpdatedBoard),
@@ -134,23 +135,22 @@ run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
   ).
 
 
-
+% New XY for bot if old XY is already the coordinates of a piece
 new_XY_run_bot(b, _X, _Y, Board, UpdatedBoard, Counters, NewCounters, NewColor):-
   random_XY_generator(Rand_X,Rand_Y),
   run_bot(b, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor).
 
+% New XY for bot if old XY is already the coordinates of a piece
 new_XY_run_bot(r, _X, _Y, Board, UpdatedBoard, Counters, NewCounters, NewColor):-
   random_XY_generator(Rand_X,Rand_Y),
   run_bot(r, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor).
 
-
+% Generates random X and Y
 random_XY_generator(Rand_X,Rand_Y):-
     random(0, 5, Rand_X),
     random(0, 5, Rand_Y).
 
-
-
-
+% Incerts a piece for player r
 insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
@@ -179,6 +179,7 @@ insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, N
         NewColor = r
     ).
 
+% Incerts a piece for player b
 insert_piece(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
@@ -206,16 +207,18 @@ insert_piece(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, N
         NewColor = b
     ).
 
+% Checks if coordinates valid
 valid_coordinates(X, Y) :-
     X >= 0, X < 5, % Assuming a 5x5 board
     Y >= 0, Y < 5.
 
+% Checks if piece is on board
 check_piece(Board, X, Y) :-
     nth0(X, Board, Row),          % Get the X-th row
     nth0(Y, Row, Cell),           % Get the Y-th element in that row
     Cell \= [].                   % Check if the cell is not empty
 
-
+% Move piece logic
 move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, UpdatedBoard) :-
     remove_from_stack(Board, CurrentX, CurrentY, Piece, TempBoard),
     update_board(TempBoard, NewX, NewY, Piece, UpdatedBoard),
@@ -223,14 +226,13 @@ move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, UpdatedBoard) :-
     display_board(UpdatedBoard, 0).
 
 
-    
+
 get_length(Board, CurrentX, CurrentY, Length):-
     nth0(CurrentX, Board, Row),          % Get the X-th row
     nth0(CurrentY, Row, Cell),           % Get the Y-th element in that row
     length(Cell, Length).
 
-% mudar de jogador r e b 
-
+% Change player r and b
 switch_color(r, b).
 switch_color(b, r).    
 
