@@ -92,6 +92,45 @@ validate_move(CurrentX, CurrentY, NewX, NewY, 4):-
 validate_move(_CurrentX, _CurrentY, _NewX, _NewY, 5):-
     true.
 
+%validate moove bot
+
+validate_move_bot(CurrentX, CurrentY, NewX, NewY, 1):-
+    (valid_horizontal_or_vertical_move_P(CurrentX, NewX, CurrentY, NewY) ->
+        true
+    ;
+        
+        false
+    ).
+
+validate_move_bot(CurrentX, CurrentY, NewX, NewY, 2):-
+    (valid_horizontal_or_vertical_move_R(CurrentX, NewX, CurrentY, NewY) ->
+        true
+    ;
+        
+        false
+    ).
+
+validate_move_bot(CurrentX, CurrentY, NewX, NewY, 3):-
+    (valid_knight_move(CurrentX, NewX, CurrentY, NewY) ->
+        true
+    ;
+        
+        false
+    ).
+
+validate_move_bot(CurrentX, CurrentY, NewX, NewY, 4):-
+    (valid_bishop_move(CurrentX, NewX, CurrentY, NewY) ->
+        true
+    ;
+        
+        false
+    ).
+
+validate_move_bot(_CurrentX, _CurrentY, _NewX, _NewY, 5):-
+    true.
+
+
+
 
 % trocar de jogador
 

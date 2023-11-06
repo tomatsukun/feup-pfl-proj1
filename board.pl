@@ -122,7 +122,7 @@ run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
 
 
 
-new_XY_run_bot(b, X, Y, Board, UpdatedBoard, Counters, NewCounters, NewColor):-
+new_XY_run_bot(b, _X, _Y, Board, UpdatedBoard, Counters, NewCounters, NewColor):-
   random_XY_generator(Rand_X,Rand_Y),
   run_bot(b, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor).
 
@@ -137,13 +137,14 @@ random_XY_generator(Rand_X,Rand_Y):-
 insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
-            write('Already occupied. Choose another cell.'),
+            write('Already occupied. Choose another cell.'),nl,
             UpdatedBoard = Board,
             write('     0     1     2     3     4'), nl, 
             display_board(Board, 0),
             NewCounterR = CounterR,
             NewCounterB = CounterB,
-            NewColor = r
+            NewColor = r,
+            process_choose_bot_dif(1, UpdatedBoard, (NewCounterR, NewCounterB))
         ; 
             update_board(Board, X, Y, r, UpdatedBoard),
             write('     0     1     2     3     4'), nl, 
@@ -203,6 +204,8 @@ move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, Piece, UpdatedBoard) :-
     update_board(TempBoard, NewX, NewY, Piece, UpdatedBoard),
     write('     0     1     2     3     4'), nl,
     display_board(UpdatedBoard, 0).
+
+
     
 get_length(Board, CurrentX, CurrentY, Length):-
     nth0(CurrentX, Board, Row),          % Get the X-th row

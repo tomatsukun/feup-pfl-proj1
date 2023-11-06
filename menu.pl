@@ -56,8 +56,6 @@ choose_bot_dif(Board, Counters):-
     process_choose_bot_dif(Option, Board, Counters).
 
 process_choose_bot_dif(1, Board, Counters):-
-    %random(1, 3, RandNumber), % escolhe random se vai mover ou clocar nova peça
-    %random_select(Color, [r,b], _Rest),
      (check_six_maKING(Board, Winner) ->
         write('The winner is: '),
         write(Winner), nl,
@@ -71,37 +69,36 @@ process_choose_bot_dif(1, Board, Counters):-
         write('| 1. Place piece              |'), nl,
         write('| 2. Move Piece               |'), nl,
         write('|-----------------------------|'), nl,
-        write('| Choose an option: '), nl,
-        read(Option),
-        %clear,
+        write('| Choose an option: '),
+        read(Option),nl,
         process_choose_move_vsbot(Option, Board, Color, Counters)
     ). % turno do player
     
     
 %% Player chose to place a piece
 process_choose_move_vsbot(1, Board, Color, Counters):-
-    clear,
+    write('     0     1     2     3     4'), nl,
+    display_board(Board,0),nl,
     place_piece_pvsbot(Counters, Board, Color).
 
 %% Player chose to move a piece
 process_choose_move_vsbot(2, Board, Color, Counters):-
-    clear,
     move_piece_pvsbot(Board, Color, Counters).
 
-place_piece_pvsbot((0, CounterB), Board, r) :-
+place_piece_pvsbot((0, _CounterB), Board, r) :-
     write('|-----------------------------|'), nl,
     write('|       All pieces placed!    |'), nl,
     write('|-----------------------------|'), nl, nl,  
-    display_board(Board, 0).
-    %%choose_move((Board, r), 0, CounterB).
+    display_board(Board, 0),
+    process_choose_bot_dif(1, (0,_CounterB),Board).
 
 
-place_piece_pvsbot((CounterR, 0), Board, b) :-
+place_piece_pvsbot((_CounterR, 0), Board, b) :-
     write('|-----------------------------|'), nl,
     write('|       All pieces placed!    |'), nl,
     write('|-----------------------------|'), nl, nl,  
-    display_board(Board, 0).
-    %%choose_move((Board, b), CounterR, 0).
+    display_board(Board, 0),
+    process_choose_bot_dif(1, (_CounterR,0),Board).
 
 place_piece_pvsbot(Counters, Board, Color):-
     hasPiecesLeft(Counters, Color),
@@ -121,7 +118,7 @@ place_piece_pvsbot(Counters, Board, Color):-
 
     %% bot escolhe se mete ou move
     random(1, 6, RandNumber), % escolhe random se vai mover ou colocar nova peça sendo a chance de mover supostamente 20%
-    ( 0 = 2 -> %% o bot nao vai coiseguir mover só colocar novas peças
+    ( 2 = 2 -> %% o bot nao vai coiseguir mover só colocar novas peças
         move_piece_bot(NewCounters, UpdatedBoard,  NewColor)
       ; 
         place_piece_bot(NewCounters, UpdatedBoard, NewColor)
@@ -155,16 +152,58 @@ write('Enter the current position (X-Y) of the piece you want to move: '), nl,
 
 
 
-
-move_piece_bot( (NewCounterR, NewCounterB) , UpdatedBoard,  NewColor):-
+% process_choose_move_bot(2, Board, Color, CounterR, CounterB):-
+move_piece_bot((NewCounterR, NewCounterB), Board, Color):-
   ( NewCounterB = 8 -> %% obriga o bot a por sempre uma peça na primeira jogada
-      place_piece_bot((NewCounterR, NewCounterB), UpdatedBoard, NewColor)
-      
+      place_piece_bot((NewCounterR, NewCounterB), Board, Color)
+  
+  ; 
+    (NewCounterB < 3 -> 
+      %write('Bot moves piece'),nl, %random_select(Color, [r, b], _Rest),
+
+    write('Chega aqui0!'),
+    %random_select((CurrentX,CurrentY),[(0,0),(0,1),(0,2),(0,3),(0,4),(1,0),(1,1),(1,2),(1,3),(1,4),(2,0),(2,1),(2,2),(2,3),(2,4),(3,0),(3,1),(3,2),(3,3),(3,4),(4,0),(4,1),(4,2),(4,3),(4,4)],_Rest),
+    random_XY_generator(CurrentX, CurrentY),
+
+     (check_piece(Board, CurrentX, CurrentY) ->
+       get_length(Board, CurrentX, CurrentY, Length),
+       write('Chega aqui1!'),
+       random_select((NewX, NewY), [(0,0),(0,1),(0,2),(0,3),(0,4),(1,0),(1,1),(1,2),(1,3),(1,4),(2,0),(2,1),(2,2),(2,3),(2,4),(3,0),(3,1),(3,2),(3,3),(3,4),(4,0),(4,1),(4,2),(4,3),(4,4)],_Rest),
+       write('Chega aqui2!'),
+       %%random_XY_generator(NewX, NewY),
+        (check_piece(Board, NewX, NewY) -> 
+          (validate_move_bot(CurrentX, CurrentY, NewX, NewY, Length) -> 
+              move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, b, UpdatedBoard), 
+              switch_color(Color, NewColor),
+              write('Bot moved the piece at ('),
+              write(CurrentX),write('-'),write(CurrentY),
+              write(') to '),
+              write('('),
+              write(NewX),write('-'),write(NewY),
+              write(')'),nl,
+              write('Chega aqui!'),
+              process_choose_bot_dif(1, UpdatedBoard, NewCounters)
+          
+          ;
+          move_piece_bot((NewCounterR, NewCounterB), Board, Color)          
+          )
+        
+        
+        ;
+        move_piece_bot((NewCounterR, NewCounterB), Board, Color)
+        )
     
-  ;
-    write('Bot moves piece'),nl
+    ;
+      move_piece_bot((NewCounterR, NewCounterB), Board, Color)
+  
+    )
+    ;
+      place_piece_bot((NewCounterR, NewCounterB), Board, Color)
+    )
     
   ).
+      
+
 
 
 
