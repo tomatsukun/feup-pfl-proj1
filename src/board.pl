@@ -154,6 +154,41 @@ random_XY_generator(Rand_X,Rand_Y):-
     random(0, 5, Rand_Y).
 
 % Incerts a piece for player r
+insert_piece_pvsbot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
+    (valid_coordinates(X, Y) ->
+        (check_piece(Board, X, Y) ->
+            write('Already occupied. Choose another cell.'), nl,
+            UpdatedBoard = Board,
+            display_game((Board, r)),
+            NewCounterR = CounterR,
+            NewCounterB = CounterB,
+            NewColor = r,
+            process_choose_bot_dif(1,UpdatedBoard, (NewCounterR, NewCounterB))
+        ; 
+            update_board(Board, X, Y, r, UpdatedBoard),
+            NewCounterR is CounterR - 1,
+            NewCounterB = CounterB,
+            switch_color(r, NewColor),
+            display_game((UpdatedBoard, NewColor))
+        );
+        write('Invalid coordinates. Please choose within the board.'), nl, 
+        UpdatedBoard = Board, % Maintain the board state if coordinates are invalid
+        display_game((Board, r)),
+        NewCounterR = CounterR,
+        NewCounterB = CounterB,
+        NewColor = r
+    ).
+
+
+
+
+
+
+
+
+
+
+% Incerts a piece for player r
 insert_piece(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->

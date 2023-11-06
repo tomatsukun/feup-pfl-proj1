@@ -235,7 +235,7 @@ place_piece_pvsbot(Counters, Board, Color):-
     write('('),
     write(X), write(','), write(Y),
     write(')'), nl,
-    insert_piece(r, X, Y, Board, UpdatedBoard, Counters, NewCounters, NewColor), % Player places piece
+    insert_piece_pvsbot(r, X, Y, Board, UpdatedBoard, Counters, NewCounters, NewColor), % Player places piece
     random(1, 6, RandNumber), % Bot choses between placing or moving a piece with a chance of behing move 20%
     ( RandNumber = 2 -> 
         move_piece_bot(NewCounters, UpdatedBoard,  NewColor)
