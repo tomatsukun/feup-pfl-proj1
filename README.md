@@ -4,8 +4,8 @@
 
 Group T10_Six Making_4
 
-* Catarina Isabel Moreira Canelas - 202103628
-* Tomás Lopes Pinto de Macedo -up202008551
+* Catarina Isabel Moreira Canelas - up202103628
+* Tomás Lopes Pinto de Macedo - up202008551
 
 ## Installation and Execution
 
