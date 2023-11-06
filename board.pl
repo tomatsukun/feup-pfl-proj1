@@ -94,7 +94,6 @@ find_col_remove([Column|Columns], ColumnIndex, Piece, [Column|UpdatedColumns]) :
     find_col_remove(Columns, NewColumnIndex, Piece, UpdatedColumns).
 
 
-% ( condition -> then_clause ; else_clause )
 %% run for bot
 run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
   ( \+check_piece(Board, X, Y) ->

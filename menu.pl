@@ -159,18 +159,11 @@ move_piece_bot((NewCounterR, NewCounterB), Board, Color):-
   
   ; 
     (NewCounterB < 3 -> 
-      %write('Bot moves piece'),nl, %random_select(Color, [r, b], _Rest),
-
-    write('Chega aqui0!'),
-    %random_select((CurrentX,CurrentY),[(0,0),(0,1),(0,2),(0,3),(0,4),(1,0),(1,1),(1,2),(1,3),(1,4),(2,0),(2,1),(2,2),(2,3),(2,4),(3,0),(3,1),(3,2),(3,3),(3,4),(4,0),(4,1),(4,2),(4,3),(4,4)],_Rest),
+    
     random_XY_generator(CurrentX, CurrentY),
 
      (check_piece(Board, CurrentX, CurrentY) ->
        get_length(Board, CurrentX, CurrentY, Length),
-       write('Chega aqui1!'),
-       random_select((NewX, NewY), [(0,0),(0,1),(0,2),(0,3),(0,4),(1,0),(1,1),(1,2),(1,3),(1,4),(2,0),(2,1),(2,2),(2,3),(2,4),(3,0),(3,1),(3,2),(3,3),(3,4),(4,0),(4,1),(4,2),(4,3),(4,4)],_Rest),
-       write('Chega aqui2!'),
-       %%random_XY_generator(NewX, NewY),
         (check_piece(Board, NewX, NewY) -> 
           (validate_move_bot(CurrentX, CurrentY, NewX, NewY, Length) -> 
               move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, b, UpdatedBoard), 
