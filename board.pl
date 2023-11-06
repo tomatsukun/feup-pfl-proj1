@@ -1,9 +1,9 @@
 :- consult(utils).
 
 
-%celulas do board
+% Board cells
 
-
+% Player r
 choose_cell([r | _], 1, ' P ').
 choose_cell([r | _], 2, ' R ').
 choose_cell([r | _], 3, ' L ').
@@ -11,6 +11,7 @@ choose_cell([r | _], 4, ' B ').
 choose_cell([r | _], 5, ' Q ').
 choose_cell([r | _], 6, ' K ').
 
+% Player b
 choose_cell([b | _], 1, ' 1 ').
 choose_cell([b | _], 2, ' 2 ').
 choose_cell([b | _], 3, ' 3 ').
@@ -19,8 +20,7 @@ choose_cell([b | _], 5, ' 5 ').
 choose_cell([b | _], 6, ' 6 '). 
 choose_cell(_, 0, '   ').
 
-
-%criar cada row do board
+% Creates each row on the board
 display_row([]) :- nl.
 display_row([Cell | Rest]) :-
     length(Cell, Length),
@@ -31,7 +31,7 @@ display_row([Cell | Rest]) :-
     write('|'),         % |_c_|
     display_row(Rest).
 
-%preencher o board
+% Fills the board
 display_board([], _):- write('  |-----|-----|-----|-----|-----| '), nl.
 display_board([Row | Rest], Index) :-
     write('  |-----|-----|-----|-----|-----| '), nl,
@@ -41,7 +41,7 @@ display_board([Row | Rest], Index) :-
     NewIndex is Index + 1,
     display_board(Rest, NewIndex).
 
-%estado inicial do board e o seu display
+% Initial state of the board and its display
 initial_board(Board):-
     Board = [
         [[], [], [], [], []],
@@ -71,8 +71,6 @@ replace_in_row([Column|Columns], ColumnIndex, Value, [Column|UpdatedColumns]) :-
     NewColumnIndex is ColumnIndex - 1,
     replace_in_row(Columns, NewColumnIndex, Value, UpdatedColumns).
 
-
-
 % Predicate to update the board at a specific Row, Column with Value
 remove_from_stack(Board, Row, Column, Piece, UpdatedBoard) :-
     find_row_remove(Board, Row, Column, Piece, UpdatedBoard).
@@ -93,17 +91,14 @@ find_col_remove([Column|Columns], ColumnIndex, Piece, [Column|UpdatedColumns]) :
     NewColumnIndex is ColumnIndex - 1,
     find_col_remove(Columns, NewColumnIndex, Piece, UpdatedColumns).
 
-
 %% Incert piece for bot
 run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
   ( \+check_piece(Board, X, Y) ->
       update_board(Board, X, Y, b, UpdatedBoard),
-
       write('Bot placed new piece  '),
       write('('),
       write(X), write(','), write(Y),
-      write(')'), nl,
-      
+      write(')'), nl,  
       write('     0     1     2     3     4'), nl, 
       display_board(UpdatedBoard, 0),
       NewCounterB is CounterB - 1,
@@ -118,12 +113,10 @@ run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
 run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
   ( \+check_piece(Board, X, Y) ->
       update_board(Board, X, Y, r, UpdatedBoard),
-
       write('Bot placed new piece  '),
       write('('),
       write(X), write(','), write(Y),
-      write(')'), nl,
-      
+      write(')'), nl,  
       write('     0     1     2     3     4'), nl, 
       display_board(UpdatedBoard, 0),
       NewCounterR is CounterR - 1,
@@ -133,7 +126,6 @@ run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
   %% if already existes a piece in that position
       new_XY_run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor)
   ).
-
 
 % New XY for bot if old XY is already the coordinates of a piece
 new_XY_run_bot(b, _X, _Y, Board, UpdatedBoard, Counters, NewCounters, NewColor):-
@@ -224,7 +216,6 @@ move_piece_logic(Board, CurrentX, CurrentY, NewX, NewY, UpdatedBoard) :-
     update_board(TempBoard, NewX, NewY, Piece, UpdatedBoard),
     write('     0     1     2     3     4'), nl,
     display_board(UpdatedBoard, 0).
-
 
 
 get_length(Board, CurrentX, CurrentY, Length):-
