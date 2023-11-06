@@ -112,6 +112,7 @@ find_col_remove([Column|Columns], ColumnIndex, Piece, [Column|UpdatedColumns]) :
     find_col_remove(Columns, NewColumnIndex, Piece, UpdatedColumns).
 
 %% Incert piece for bot
+% run_bot(+color, +X, +Y, +Board, -UpdatedBoard, (+CounterR, +CounterB), (-NewCounterR, -NewCounterB), +NewColor)
 run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
   ( \+check_piece(Board, X, Y) ->
       update_board(Board, X, Y, b, UpdatedBoard),
@@ -130,6 +131,7 @@ run_bot(b, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
   ).
 
 % Incert piece for bot
+% run_bot(+color, +X, +Y, +Board, -UpdatedBoard, (+CounterR, +CounterB), (-NewCounterR, -NewCounterB), +NewColor)
 run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
   ( \+check_piece(Board, X, Y) ->
       update_board(Board, X, Y, r, UpdatedBoard),
@@ -147,21 +149,25 @@ run_bot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCou
   ).
 
 % New XY for bot if old XY is already the coordinates of a piece
+% new_XY_run_bot(+b, +X, +Y, +Board, -UpdatedBoard, +Counters, -NewCounters, -NewColor)
 new_XY_run_bot(b, _X, _Y, Board, UpdatedBoard, Counters, NewCounters, NewColor):-
   random_XY_generator(Rand_X,Rand_Y),
   run_bot(b, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor).
 
 % New XY for bot if old XY is already the coordinates of a piece
+% new_XY_run_bot(+Color, +X, +Y, +Board, -UpdatedBoard, +Counters, -NewCounters, -NewColor)
 new_XY_run_bot(r, _X, _Y, Board, UpdatedBoard, Counters, NewCounters, NewColor):-
   random_XY_generator(Rand_X,Rand_Y),
   run_bot(r, Rand_X, Rand_Y, Board, UpdatedBoard, Counters, NewCounters, NewColor).
 
 % Generates random X and Y
+% random_XY_generator(-Rand_X,-Rand_Y)
 random_XY_generator(Rand_X,Rand_Y):-
     random(0, 5, Rand_X),
     random(0, 5, Rand_Y).
 
 % Incerts a piece for player r
+% insert_piece_pvsbot(+Color, +X, +Y, +Board, -UpdatedBoard, (+CounterR, +CounterB), (-NewCounterR, -NewCounterB), -NewColor)
 insert_piece_pvsbot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCounterR, NewCounterB), NewColor):-
     (valid_coordinates(X, Y) ->
         (check_piece(Board, X, Y) ->
@@ -186,13 +192,6 @@ insert_piece_pvsbot(r, X, Y, Board, UpdatedBoard, (CounterR, CounterB), (NewCoun
         NewCounterB = CounterB,
         NewColor = r
     ).
-
-
-
-
-
-
-
 
 
 

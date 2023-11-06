@@ -162,6 +162,7 @@ choose_bot_dif(Board, Counters):-
     process_choose_bot_dif(Option, Board, Counters).
 
 % Processes the choice of bot difficulty
+% process_choose_bot_dif(1, +Board, +Counters):-
 process_choose_bot_dif(1, Board, Counters):-
      (game_over(Board, Winner) ->
         write('The winner is: '),
@@ -182,17 +183,20 @@ process_choose_bot_dif(1, Board, Counters):-
     ). 
     
 
-%% Player chose to place a piece
+% Player chose to place a piece
+% process_choose_move_vsbot(Option, +Board, +Color, +Counters):-
 process_choose_move_vsbot(1, Board, Color, Counters):-
     write('     0     1     2     3     4'), nl,
     display_board(Board,0),nl,
     place_piece_pvsbot(Counters, Board, Color).
 
-%% Player chose to move a piece
+% Player chose to move a piece
+% process_choose_move_vsbot(Option, +Board, +Color, +Counters):-
 process_choose_move_vsbot(2, Board, Color, Counters):-
     move_piece_pvsbot(Board, Color, Counters).
 
 % Place piece vs Bot
+% place_piece_pvsbot((+CounterR, +CounterB), +Board, +Color)
 place_piece_pvsbot((0, _CounterB), Board, r) :-
     write('|-----------------------------|'), nl,
     write('|       All pieces placed!    |'), nl,
@@ -227,6 +231,7 @@ place_piece_pvsbot(Counters, Board, Color):-
     ).
 
 % Moves piece Player vs Bot
+% move_piece_pvsbot(+Board, +Color, +Counters)
 move_piece_pvsbot(Board, _Color, Counters):-
 write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     read(CurrentX-CurrentY),
@@ -250,6 +255,7 @@ write('Enter the current position (X-Y) of the piece you want to move: '), nl,
     ).
 
 % Places bot piece
+% place_piece_bot(+Counters, +Board, +Color)
 place_piece_bot(Counters, Board, Color):-
     hasPiecesLeft(Counters, Color),
     random_XY_generator(Rand_X,Rand_Y),
@@ -257,6 +263,7 @@ place_piece_bot(Counters, Board, Color):-
     process_choose_bot_dif(1, UpdatedBoard, NewCounters).
 
 % Moves bot piece
+% move_piece_bot((+NewCounterR, +NewCounterB), +Board, +Color)
 move_piece_bot((NewCounterR, NewCounterB), Board, Color):-
   ( NewCounterB = 8 -> %% Forces the bot to always place a piece on the first move
       place_piece_bot((NewCounterR, NewCounterB), Board, Color)
@@ -293,6 +300,7 @@ move_piece_bot((NewCounterR, NewCounterB), Board, Color):-
 % --------------------- Computer vs Computer ---------------------
 
 % Choses Bot difficulty in Bot vs Bot
+% choose_bot_dif_bvb(+Board, +Counters, +Color)
 choose_bot_dif_bvb(Board, Counters, Color):-
     write('|-----------------------------|'), nl,
     write('|    Choose Bot Difficulty    |'), nl,
@@ -305,6 +313,7 @@ choose_bot_dif_bvb(Board, Counters, Color):-
     process_choose_bot_dif_bvb(Option, Board, Counters, Color).
 
 % Processes Bot difficulty in Bot vs Bot
+% process_choose_bot_dif_bvb(+Option, +Board, +Counters, +Color)
 process_choose_bot_dif_bvb(1, Board, Counters, Color):-
   (game_over(Board, Winner) ->
         write('The winner is: '),
@@ -317,6 +326,7 @@ process_choose_bot_dif_bvb(1, Board, Counters, Color):-
     ). 
 
 % Places piece in Bot vs Bot
+% place_piece_bot_bvb(+Counters, +Board, +Color)
 place_piece_bot_bvb(Counters, Board, Color):-
     hasPiecesLeft(Counters, Color),
     random_XY_generator(Rand_X,Rand_Y),
