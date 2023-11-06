@@ -213,6 +213,14 @@ It will transverse all the rows of the board, and then all the stacks of the row
 ### Game State Evaluation
 
 ### Computer Plays
+Antes de começar o jogo é perguntado a dificuldade do bot e caso o bot fácil seja selecionado o bot vai escolher entre entre colocar ou mover uma peça sendo a probabilidade de mover ser escolhido 20%. Caso seja escolhido colocar é verificado se o bot tem peças para colocar atraves do predicado hasPiecesLeft/2 e vai ser gerado um par X-Y aleatoriamente através do predicado random_XY_generator/2. Em seguida é chamado o predicado run_bot/8, que coloca a peça nas cordenadas geradas e caso as cordenadas geradas sejam de uma peça já existente gera umas novas cordenadas através do predicado new_XY_run_bot/8. Caso seja escolhido mover uma peça o bot gera um par X-Y através do predicado random_XY_generator/2, verifica se a peça existe no tabuleiro através do predicado check_piece/3 e caso a peça exista gera outro par X-Y, agora para onde o bot irá mover a peça, e verifica novamente se existe essa peça no tabuleiro. Assegura-se que existe um movimento válido, pelo predicado validate_move_bot/5, e move a peça para essa nova posição.
+
+
+
+
+
+
+
 
 ## Conclusions
 
